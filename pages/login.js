@@ -8,7 +8,8 @@ const login = () => {
   return session ? (
     <div>
       {' '}
-      You are logged in
+      <p>You are logged in as {session.user.name}</p>
+      <p>email: {session.user.email}</p>
       <button onClick={() => signOut()}>Sign Out</button>
     </div>
   ) : (
