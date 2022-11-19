@@ -1,17 +1,25 @@
-const profile = () => {
+import { getSession, signOut } from 'next-auth/react';
+
+const profile = ({ session }) => {
+  console.log(session);
+
   return (
     <div className="container">
       <div className="row mt-5">
         <div className="col-6">
           <div>
-            {/* <p><strong>User Name</strong>: <%= user.userName %></p> */}
-            {/* <p><strong>Email</strong>: <%= user.email %></p> */}
-            <a
-              href="/logout"
+            <p>
+              <strong>User Name</strong>: {session.user.name}{' '}
+            </p>
+            <p>
+              <strong>Email</strong>: {session.user.email}{' '}
+            </p>
+            <button
+              onClick={() => signOut()}
               className="col-3 btn btn-primary"
             >
               Logout
-            </a>
+            </button>
           </div>
           <div className="mt-5">
             <h2>Add a post</h2>
@@ -96,3 +104,19 @@ const profile = () => {
 };
 
 export default profile;
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}
