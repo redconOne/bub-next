@@ -1,7 +1,26 @@
 import { getSession, signOut } from 'next-auth/react';
 
 const profile = ({ session }) => {
-  console.log(session);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    console.log('handlesubmit', event.target.title);
+    const data = {
+      title: event.target.title.value,
+      caption: event.target.caption.value,
+      image:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7DqNdGWnC16mCK-Pg2rPSVGCLIIX03z2aig&usqp=CAU',
+      cloudinaryId: 'this an id',
+      user: session.user.email,
+    };
+
+    const response = await fetch('http://localhost:3000/api/post', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }).then((res) => res.json());
+
+    console.log(response);
+  };
 
   return (
     <div className="container">
@@ -24,9 +43,9 @@ const profile = ({ session }) => {
           <div className="mt-5">
             <h2>Add a post</h2>
             <form
-              action="/post/createPost"
-              encType="multipart/form-data"
               method="POST"
+              action="/post/createPost"
+              onSubmit={handleSubmit}
             >
               <div className="mb-3">
                 <label
@@ -72,8 +91,8 @@ const profile = ({ session }) => {
               <button
                 type="submit"
                 className="btn btn-primary"
-                value="Upload"
               >
+                {' '}
                 Submit
               </button>
             </form>
